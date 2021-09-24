@@ -56,7 +56,7 @@ lv_obj_t* lv_rlottie_create_from_file(lv_obj_t* parent, lv_coord_t width, lv_coo
     path_create = path;
     rlottie_desc_create = NULL;
 
-    LV_LOG_INFO("begin")
+    LV_LOG_INFO("begin");
     lv_obj_t * obj = lv_obj_class_create_obj(MY_CLASS, parent);
     lv_obj_class_init_obj(obj);
 
@@ -72,11 +72,25 @@ lv_obj_t* lv_rlottie_create_from_raw(lv_obj_t* parent, lv_coord_t width, lv_coor
     rlottie_desc_create = rlottie_desc;
     path_create = NULL;
 
-    LV_LOG_INFO("begin")
+    LV_LOG_INFO("begin");
     lv_obj_t * obj = lv_obj_class_create_obj(MY_CLASS, parent);
     lv_obj_class_init_obj(obj);
 
     return obj;
+}
+
+void lv_rlottie_pause(lv_obj_t* obj)
+{
+    lv_rlottie_t * rlottie = (lv_rlottie_t *)obj;
+
+    lv_timer_pause(rlottie->task);
+}
+
+void lv_rlottie_resume(lv_obj_t* obj)
+{
+    lv_rlottie_t * rlottie = (lv_rlottie_t *)obj;
+
+    lv_timer_resume(rlottie->task);
 }
 
 /**********************
@@ -125,7 +139,9 @@ static void lv_rlottie_constructor(const lv_obj_class_t * class_p, lv_obj_t * ob
     lv_img_set_src(obj, &rlottie->imgdsc);
 
     rlottie->task = lv_timer_create(next_frame_task_cb, 1000 / rlottie->framerate, obj);
-
+    lv_timer_t t = { 0 };
+    t.user_data = obj;
+    next_frame_task_cb(&t);
     lv_obj_update_layout(obj);
 }
 
