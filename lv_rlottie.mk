@@ -12,4 +12,7 @@ CXXEXT = .cpp
 CXXFLAGS += "-I$(LOTTIE_DIR)"
 CFLAGS += "-I$(LOTTIE_DIR)"
 
+CXXFLAGS += -fpermissive
+# CFLAGS += -fpermissive
+
 include $(LOTTIE_DIR)/$(LOTTIE_DIR_NAME)/rlottie.mk
